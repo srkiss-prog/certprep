@@ -35,3 +35,32 @@ Canonical definitions for CBP/Bitcoin terms used across all domains.
 ## Encoding & Checksums
 
 - Base58Check: Base58 encoding with a version/payload and a 4-byte checksum to catch common transcription errors.
+
+## Symmetric vs Asymmetric Cryptography
+
+- Symmetric encryption: Same secret key encrypts and decrypts.
+- Asymmetric (public-key) cryptography: Uses a keypair with different roles for public vs private keys.
+- Public key: Shareable key used to verify signatures or encrypt to a recipient.
+- Private key: Secret key used to sign (and to decrypt in public-key encryption).
+- Digital signature: Cryptographic proof of authenticity and integrity; publicly verifiable.
+- MAC: Shared-secret message authentication tag providing integrity/authentication, not non-repudiation.
+- Key exchange (Diffie–Hellman): Protocol to derive a shared secret without sending it directly.
+- ECDH: Elliptic-curve Diffie–Hellman; key agreement method to derive a shared secret.
+- Hybrid encryption: Asymmetric establishes a session key; symmetric encrypts bulk data.
+- AEAD: Authenticated encryption with associated data; provides confidentiality + integrity.
+- Nonce / IV: Per-message value required by many encryption modes; must follow uniqueness/randomness rules for security.
+- MITM attack: Attacker substitutes keys/relays messages when identities/keys aren’t authenticated.
+- PKI / certificate: Mechanism for binding a public key to an identity to enable authenticated key distribution.
+- RSA: Public-key algorithm historically used for encryption/signatures (conceptually asymmetric).
+- ECC: Elliptic-curve cryptography; public-key cryptography family used by Bitcoin for signatures.
+- ECDSA: Elliptic-curve digital signature algorithm used in Bitcoin (asymmetric signatures).
+- Schnorr signature: Public-key signature scheme used in modern Bitcoin script contexts (asymmetric signatures).
+- One-time pad (OTP): Symmetric scheme with perfect secrecy when key is truly random, secret, and used only once.
+
+## Digital Signatures
+
+- Verification: Checking a signature is valid for a given message and public key.
+- Authenticity: Assurance the message was authorized by the private key corresponding to a given public key.
+- Integrity: Assurance the signed message bytes were not altered after signing.
+- Non-repudiation: Property where third parties can verify a signature as evidence of authorization (assuming private key control).
+- Hash-then-sign: Common pattern of signing a fixed-size hash digest of the message rather than the full message.

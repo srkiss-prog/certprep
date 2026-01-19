@@ -4,6 +4,7 @@ This file is the single source of truth for **what to study next**.
 It functions as a lightweight Kanban board for CBP preparation.
 
 Rules:
+
 - Items in **Next Up** are candidates for the next drill generation.
 - Move items to **In Progress** only when actively drilling them.
 - Move items to **Covered** once at least one speed-recognition drill exists.
@@ -15,11 +16,11 @@ Rules:
 ## Next Up
 
 ### Cryptography Basics
-- [ ] Hash Functions
-- [ ] Symmetric vs Asymmetric Cryptography
+
 - [ ] Digital Signatures
 
 ### Bitcoin Basics
+
 - [ ] Keys & Addresses
 - [ ] Transactions & UTXOs
 - [ ] Fees and Fee Estimation
@@ -28,25 +29,24 @@ Rules:
 
 ## In Progress
 
-*(Move items here only during active drilling)*
+- [ ] Symmetric vs Asymmetric Cryptography
 
 ---
 
 ## Covered
 
-*(At least one drill completed)*
+- [ ] Hash Functions
 
 ---
 
 ## Revisit (High Trap Density)
-
-*(Concepts that caused repeated fast-fail mistakes)*
 
 ---
 
 ## Backlog (Lower Priority / Later)
 
 ### History of Money
+
 - [ ] Functions of Money
 - [ ] Properties of Money
 - [ ] Centralized Ledgers
@@ -54,12 +54,14 @@ Rules:
 - [ ] Predecessors & Notable Events
 
 ### Digital Economy
+
 - [ ] Centralized vs Decentralized Systems
 - [ ] Decentralized Consensus (Four Processes)
 - [ ] Altcoins and Fork Types
 - [ ] Exchanges (Custodial vs Non-Custodial)
 
 ### Consensus, Mining & BIPs
+
 - [ ] Mining and Block Rewards
 - [ ] Difficulty Adjustment & Proof-of-Work
 - [ ] Mining Pools & Hardware
@@ -69,6 +71,7 @@ Rules:
 - [ ] Taproot & Ordinals (Conceptual)
 
 ### Wallets & Key Management
+
 - [ ] Types of Clients (Full vs SPV)
 - [ ] Wallet Types (Hot, Cold, Hardware, Multisig)
 - [ ] Deterministic Wallets & Passphrases
@@ -76,6 +79,7 @@ Rules:
 - [ ] Wallet Import Format (WIF)
 
 ### Bitcoin Commerce
+
 - [ ] Using Bitcoin in Practice
 - [ ] Payment Processors
 - [ ] Merchant Setups (On-chain + Lightning)
