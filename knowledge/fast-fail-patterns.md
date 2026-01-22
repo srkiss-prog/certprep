@@ -32,3 +32,19 @@ Recurring mistakes, traps, and “looks true but isn’t” patterns found durin
 - “Encrypt with private key” confusion: that’s conceptually signing; confidentiality uses public-key encryption to a recipient.
 - Over-claiming what a signature proves: it proves key authorization of bytes, not intent, truth, or meaning.
 - Mixing MACs and signatures: MACs require shared secrets and don’t provide public verifiability/non-repudiation.
+- Thinking “signature proves time” or “signature proves intent”; without extra context, it only proves key authorization of specific bytes.
+- Confusing what Bitcoin signs: the signature covers a transaction digest (sighash), not “the txid string”.
+- Missing the ECDSA nonce requirement: nonce reuse/bad randomness can leak the private key.
+- Ignoring encoding/canonical rules (leading to malleability-like issues): multiple valid encodings can change identifiers while keeping spends valid.
+
+## Keys & Addresses
+
+- Treating an address as where coins are stored (UTXOs are locked by scripts; addresses are encodings for those scripts).
+- Confusing checksum with security (checksums catch typos; they don’t stop attackers).
+- Mixing up what’s revealed when spending (typically signature + pubkey/script, not the private key).
+- Confusing Bech32 vs Base58Check (different encodings; Bech32 is for SegWit witness programs).
+- Assuming different addresses always mean different private keys (wallets derive many addresses from one root secret).
+- Confusing “watch-only” (xpub) capability with spending capability (xpub tracks; private keys spend).
+- Mixing up Bech32 vs Bech32m (SegWit v0 vs v1+ encoding) and assuming they’re interchangeable.
+- Treating “change address” as a special address type rather than a wallet behavior (change can be any valid address type).
+- Assuming one output always corresponds to one key (multisig and script conditions can require multiple keys).

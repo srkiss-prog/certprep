@@ -15,13 +15,8 @@ Rules:
 
 ## Next Up
 
-### Cryptography Basics
-
-- [ ] Digital Signatures
-
 ### Bitcoin Basics
 
-- [ ] Keys & Addresses
 - [ ] Transactions & UTXOs
 - [ ] Fees and Fee Estimation
 
@@ -29,13 +24,17 @@ Rules:
 
 ## In Progress
 
-- [ ] Symmetric vs Asymmetric Cryptography
+- [ ] Keys & Addresses
 
 ---
 
 ## Covered
 
+### Cryptography Basics
+
 - [ ] Hash Functions
+- [ ] Symmetric vs Asymmetric Cryptography
+- [ ] Digital Signatures
 
 ---
 

@@ -64,3 +64,30 @@ Canonical definitions for CBP/Bitcoin terms used across all domains.
 - Integrity: Assurance the signed message bytes were not altered after signing.
 - Non-repudiation: Property where third parties can verify a signature as evidence of authorization (assuming private key control).
 - Hash-then-sign: Common pattern of signing a fixed-size hash digest of the message rather than the full message.
+- ECDSA nonce (`k`): Per-signature secret value that must be unique/unpredictable; reuse can reveal the private key.
+- Sighash (Bitcoin): Transaction digest that a Bitcoin signature commits to, determined by signature-hash rules.
+- Transaction malleability: Changing a transaction’s representation in a way that preserves validity but changes its identifier.
+- Signature encoding (e.g., DER/canonical): Rules for representing signatures to prevent ambiguous encodings and malleability issues.
+
+## Keys & Addresses
+
+- Address: Human-friendly encoding that represents a script destination (not a key).
+- UTXO: Unspent transaction output; the spendable “coins” locked by a script.
+- scriptPubKey (locking script): Output script that defines the spending conditions for an output.
+- scriptSig: Legacy input unlocking data that can provide signatures/public keys/scripts to satisfy spending conditions.
+- Witness: SegWit input unlocking data (e.g., signatures) provided separately from legacy transaction serialization.
+- P2PKH: Pay-to-PubKey-Hash; locking script that commits to `HASH160(pubkey)`.
+- P2SH: Pay-to-Script-Hash; locking script that commits to `HASH160(redeemScript)`.
+- Redeem script: Script revealed when spending a P2SH output to satisfy the committed script hash.
+- Witness program: SegWit output program (version + data) that defines how an output can be spent (commonly encoded as Bech32).
+- Bech32: Address encoding used for SegWit witness programs with strong typo-detection checksum properties.
+- Bech32m: Modified Bech32 checksum encoding used for SegWit v1+ witness programs (e.g., Taproot).
+- Base58Check: Base58 encoding with a version/payload and checksum used by legacy address formats and WIF.
+- WIF: Wallet Import Format; Base58Check encoding for private keys (plus metadata like compression flag).
+- HD wallet: Hierarchical deterministic wallet that derives many keys/addresses from a single root secret (seed).
+- xpub: Extended public key used to derive child public keys/addresses (watch-only; cannot spend).
+- xprv: Extended private key used to derive child private keys for spending.
+- Change address: Wallet-generated address used to receive leftover value from your own transaction output.
+- P2WPKH: Pay-to-Witness-PubKey-Hash; SegWit v0 output type locking to a 20-byte pubkey hash witness program.
+- Taproot / P2TR: SegWit v1 output type (Pay-to-Taproot), typically encoded using Bech32m.
+- Multisig: Script condition requiring multiple signatures/keys to spend.

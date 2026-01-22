@@ -21,8 +21,10 @@ Time constraint: ~16 seconds per question
 Format: "speed_recognition_v1"
 
 Constraints:
+
 - Mix TRUE/FALSE and MULTIPLE-CHOICE.
 - Multiple-choice must be answerable by immediate recognition (no long elimination).
+- Don't always prefer B as the correct answer, let it be challenging
 - At least 40% of all questions must be traps.
 - No calculation-heavy or math-based questions.
 - Favor definition accuracy, role clarity, cause–effect, and “what changes if X is missing”.
@@ -30,22 +32,24 @@ Constraints:
 
 Output schema (must follow exactly):
 
-1) MINI-RECAP (max 90 words, compressed for recall)
+1. MINI-RECAP (max 90 words, compressed for recall)
 
-2) KEY TERMS
+2. KEY TERMS
+
    - 6–10 terms
    - One-line, exam-safe definitions only
 
-3) SPEED DRILL (25 questions total)
+3. SPEED DRILL (25 questions total)
+
    - Q1–Q15: TRUE / FALSE
    - Q16–Q25: MULTIPLE CHOICE (A–D)
-   For each question:
+     For each question:
      - Question / Statement
      - Correct answer
      - 1-sentence justification
      - Tag(s)
 
-4) COMMON FAST-FAIL PATTERNS
+4. COMMON FAST-FAIL PATTERNS
    - 4 bullets describing mistakes caused by speed or wording
 
 ---
