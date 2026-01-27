@@ -48,3 +48,20 @@ Recurring mistakes, traps, and “looks true but isn’t” patterns found durin
 - Mixing up Bech32 vs Bech32m (SegWit v0 vs v1+ encoding) and assuming they’re interchangeable.
 - Treating “change address” as a special address type rather than a wallet behavior (change can be any valid address type).
 - Assuming one output always corresponds to one key (multisig and script conditions can require multiple keys).
+- Confusing address knowledge with wallet knowledge (an address does not imply you can derive xpub/seed/private keys).
+- Restoring a seed with the wrong derivation path/account or insufficient gap limit and concluding funds are “missing”.
+- Mixing up nested SegWit (Base58Check P2SH wrapper) with native SegWit (Bech32/Bech32m witness programs).
+- Overstating what an address checksum does (typo detection only; not network integrity or anti-theft).
+
+## Transactions & UTXOs
+
+- Thinking inputs “contain” value; value lives in the referenced UTXO, not the input.
+- Treating addresses as account balances (Bitcoin tracks UTXOs, not accounts).
+- Confusing mempool policy with consensus validity (zero-fee can be valid but not relayed/mined).
+- Forgetting coinbase maturity (coinbase outputs aren’t immediately spendable).
+- Miscomputing fees (fee is implicit: sum(inputs) − sum(outputs), not an explicit output).
+- Assuming the UTXO set includes mempool outputs (it’s confirmed state only).
+- Confusing RBF vs CPFP (replacement vs child spending) and when each applies.
+- Forgetting that txid can change due to malleability for some transaction types.
+- Thinking nLockTime/nSequence always invalidate a transaction (they enforce timing/relative constraints).
+- Treating dust as consensus-invalid rather than policy-limited.

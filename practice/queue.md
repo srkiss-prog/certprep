@@ -17,14 +17,13 @@ Rules:
 
 ### Bitcoin Basics
 
-- [ ] Transactions & UTXOs
 - [ ] Fees and Fee Estimation
 
 ---
 
 ## In Progress
 
-- [ ] Keys & Addresses
+- [ ] Transactions & UTXOs
 
 ---
 
@@ -35,6 +34,10 @@ Rules:
 - [ ] Hash Functions
 - [ ] Symmetric vs Asymmetric Cryptography
 - [ ] Digital Signatures
+
+### Bitcoin Basics
+
+- [ ] Keys & Addresses
 
 ---
 

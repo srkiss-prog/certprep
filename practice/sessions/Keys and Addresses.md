@@ -385,3 +385,193 @@ D) They can change consensus rules
 - Correct answer: C
 - Justification: An xpub enables address derivation/monitoring, which is a privacy risk.
 - Tag(s): xpub, privacy, trap
+
+## Drill Set: 2026-01-20 — Keys & Addresses (Append — Level 3B)
+
+### SPEED DRILL (25 new questions total)
+
+Q51) A seed phrase (mnemonic) is a human-readable encoding of wallet secret material used to derive many keys.
+
+- Correct answer: TRUE
+- Justification: A mnemonic encodes/derives the seed from which many keys/addresses can be derived.
+- Tag(s): bip39, seed, trap
+
+Q52) If you know someone’s address, you can derive their xpub.
+
+- Correct answer: FALSE
+- Justification: Addresses don’t reveal the wallet’s extended public key.
+- Tag(s): trap, xpub, addresses
+
+Q53) “Hardened” derivation is used so that an xpub alone cannot derive certain child keys.
+
+- Correct answer: TRUE
+- Justification: Hardened derivation prevents deriving child private keys from public derivation data.
+- Tag(s): bip32, hardened, trap
+
+Q54) A wallet can generate valid receiving addresses offline; it does not need to be connected to the Bitcoin network to derive addresses.
+
+- Correct answer: TRUE
+- Justification: Address derivation is local computation from wallet keys.
+- Tag(s): wallet, derivation
+
+Q55) If you send funds to a valid address, those funds are lost unless the recipient is online at the moment you send.
+
+- Correct answer: FALSE
+- Justification: Funds are locked to scripts on-chain; the recipient does not need to be online to receive.
+- Tag(s): trap, utxo
+
+Q56) A “derivation path” specifies how to derive a particular child key/address from a root (e.g., account/change/index).
+
+- Correct answer: TRUE
+- Justification: Paths define deterministic key derivation steps in HD wallets.
+- Tag(s): bip32, derivation, trap
+
+Q57) Using the wrong address type for your wallet (e.g., sending to a Taproot address when your wallet can’t spend Taproot) can make funds unspendable for that wallet.
+
+- Correct answer: TRUE
+- Justification: Spendability depends on the wallet supporting the script type and having the right keys.
+- Tag(s): trap, wallet, taproot
+
+Q58) P2WSH is a SegWit output type that locks to a script hash in a witness program.
+
+- Correct answer: TRUE
+- Justification: P2WSH commits to a 32-byte witness script hash in a SegWit v0 program.
+- Tag(s): segwit, p2wsh, scripts
+
+Q59) A nested SegWit (P2SH-P2WPKH) address is encoded using Bech32.
+
+- Correct answer: FALSE
+- Justification: Nested SegWit uses a P2SH wrapper and typically uses Base58Check encoding.
+- Tag(s): trap, segwit, p2sh
+
+Q60) Wallet “gap limit” issues can cause a wallet to miss funds if it doesn’t scan far enough in the derivation sequence.
+
+- Correct answer: TRUE
+- Justification: If addresses beyond the scan window receive funds, the wallet may not detect them without deeper scanning.
+- Tag(s): trap, wallet, derivation
+
+Q61) An xprv is safe to share publicly because it only contains public derivation data.
+
+- Correct answer: FALSE
+- Justification: xprv includes private key material and enables spending.
+- Tag(s): trap, xprv, keys
+
+Q62) In Bitcoin, a “change output” sends leftover value back to an address controlled by the sender’s wallet.
+
+- Correct answer: TRUE
+- Justification: Change is returned to a wallet-controlled script after paying recipients.
+- Tag(s): wallet, change
+
+Q63) A private key directly encodes the address you should use for receiving.
+
+- Correct answer: FALSE
+- Justification: Addresses are derived from public-key/script identifiers and encodings, not directly from the private key.
+- Tag(s): trap, keys, addresses
+
+Q64) In general, you can spend from an output only if you can satisfy its locking script, regardless of which address format it was shown as.
+
+- Correct answer: TRUE
+- Justification: Spendability is defined by script conditions, not the human display format.
+- Tag(s): scripts, trap
+
+Q65) Taproot supports both key-path and script-path spending, but the on-chain representation differs depending on how it’s spent.
+
+- Correct answer: TRUE
+- Justification: Taproot can be spent via a key path (simple) or reveal scripts via script path.
+- Tag(s): taproot, scripts, trap
+
+Q66) Which item is the most dangerous to expose?
+A) Address
+B) Public key
+C) xpub
+D) Seed phrase
+
+- Correct answer: D
+- Justification: A seed phrase can regenerate the wallet’s private keys and enable full spending.
+- Tag(s): seed, custody, trap
+
+Q67) Which output type is a SegWit v0 “script hash” witness program?
+A) P2WPKH
+B) P2WSH
+C) P2TR
+D) P2PKH
+
+- Correct answer: B
+- Justification: P2WSH is the SegWit v0 witness program for a 32-byte script hash.
+- Tag(s): segwit, p2wsh, trap
+
+Q68) Which statement best describes what BIP39 is used for?
+A) Proof-of-work target adjustment
+B) Mnemonic seed phrases for wallet backups
+C) Transaction signature hashing rules
+D) Address checksum verification on the network
+
+- Correct answer: B
+- Justification: BIP39 defines mnemonic phrases used to back up/restore wallet seeds.
+- Tag(s): bip39, seed, trap
+
+Q69) Which statement best describes what BIP32 is used for?
+A) Hashing block headers
+B) Hierarchical deterministic key derivation (xpub/xprv)
+C) Scriptless multi-party computation
+D) Base58 encoding rules
+
+- Correct answer: B
+- Justification: BIP32 defines HD wallet key derivation using extended keys.
+- Tag(s): bip32, hd-wallets, trap
+
+Q70) A watch-only wallet setup most commonly relies on:
+A) Seed phrase
+B) xpub
+C) xprv
+D) WIF
+
+- Correct answer: B
+- Justification: xpub enables deriving addresses and monitoring without private keys.
+- Tag(s): wallet, xpub, trap
+
+Q71) What is the best description of a “derivation path” in HD wallets?
+A) A network route for transaction relay
+B) A sequence of steps/indices used to derive a specific child key
+C) A checksum method for addresses
+D) A miner selection algorithm
+
+- Correct answer: B
+- Justification: Paths define deterministic child key derivation positions.
+- Tag(s): derivation, hd-wallets, trap
+
+Q72) Which pairing is correct for common address encodings?
+A) P2PKH → Bech32m
+B) P2TR → Bech32m
+C) P2SH → Bech32
+D) WIF → Bech32
+
+- Correct answer: B
+- Justification: Taproot (SegWit v1) addresses use Bech32m.
+- Tag(s): taproot, bech32m, trap
+
+Q73) If you restore a wallet from the correct seed phrase but use a different derivation path/account than the original, you might not see your funds.
+
+- Correct answer: TRUE
+- Justification: Different derivation paths yield different keys/addresses, so scanning the wrong path can miss UTXOs.
+- Tag(s): trap, seed, derivation
+
+Q74) Which is the most accurate statement about address checksums?
+A) They provide cryptographic protection against theft
+B) They mainly help catch human input errors
+C) They prevent double spending
+D) They prove address ownership
+
+- Correct answer: B
+- Justification: Checksums are error-detection, not an anti-theft mechanism.
+- Tag(s): checksum, trap
+
+Q75) If someone gets your xpub, they can most directly:
+A) Spend your funds
+B) Derive private keys
+C) Monitor your derived addresses and transactions
+D) Change your wallet’s seed
+
+- Correct answer: C
+- Justification: xpub disclosure is primarily a privacy leak.
+- Tag(s): xpub, privacy, trap

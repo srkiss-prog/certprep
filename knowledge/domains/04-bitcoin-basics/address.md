@@ -25,3 +25,11 @@ SHA256(SHA256(payload))
 4. Encode
 
 address = Base58Encode(payload || checksum)
+
+# Watch-only wallets
+
+A watch-only wallet is a cryptocurrency wallet that can view balances, transactions, and addresses but cannot spend funds because it does not contain private keys.
+
+# Extended public keys
+
+xpub / ypub / zpub tell the wallet how to turn derived public keys into Bitcoin addresses.

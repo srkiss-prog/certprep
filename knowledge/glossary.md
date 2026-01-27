@@ -31,6 +31,27 @@ Canonical definitions for CBP/Bitcoin terms used across all domains.
 - SegWit: Bitcoin upgrade that separates witness (signatures) from the legacy transaction serialization.
 - Witness: Script/signature data used to satisfy spending conditions (separated in SegWit).
 - wtxid: SegWit transaction identifier that commits to witness data (unlike legacy `txid`).
+- UTXO: Unspent transaction output; the spendable units tracked by the protocol.
+- Input (vin): References a previous output and provides unlocking data (scriptSig/witness).
+- Output (vout): Creates a new spendable output with a locking script (scriptPubKey).
+- scriptPubKey: Locking script that defines spending conditions for an output.
+- scriptSig / witness: Unlocking data that satisfies the locking script.
+- Coinbase transaction: Special transaction that creates new coins + collects fees; no normal inputs.
+- Coinbase maturity: Minimum number of blocks before a coinbase output can be spent.
+- Fee: Sum(inputs) − sum(outputs).
+- Mempool: Node’s pool of valid, unconfirmed transactions.
+- Dust: Output too small to be economical to spend.
+- Change: Leftover input value sent back to the sender.
+- Malleability: Changing a transaction’s encoding without invalidating the spend (can change txid).
+- Policy vs consensus: Policy governs relay/mining; consensus governs validity.
+- RBF (Replace-by-Fee): Mempool policy allowing replacement of an unconfirmed transaction with a higher-fee version.
+- CPFP (Child Pays For Parent): Fee-bumping method using a high-fee child transaction spending a parent’s output.
+- vout: Output index within a transaction used to identify a specific output.
+- OP_RETURN: Script opcode that makes an output provably unspendable, typically used for data.
+- Weight / vsize: Transaction size metrics that account for witness data, used to compute fee rates.
+- nLockTime: Transaction-level field that prevents inclusion before a specified time or block height.
+- nSequence: Per-input field used for relative timelocks and opt-in RBF signaling.
+- CSV (CHECKSEQUENCEVERIFY): Opcode enabling relative timelocks based on input age.
 
 ## Encoding & Checksums
 
@@ -91,3 +112,10 @@ Canonical definitions for CBP/Bitcoin terms used across all domains.
 - P2WPKH: Pay-to-Witness-PubKey-Hash; SegWit v0 output type locking to a 20-byte pubkey hash witness program.
 - Taproot / P2TR: SegWit v1 output type (Pay-to-Taproot), typically encoded using Bech32m.
 - Multisig: Script condition requiring multiple signatures/keys to spend.
+- P2WSH: Pay-to-Witness-Script-Hash; SegWit v0 output type locking to a 32-byte witness script hash.
+- Nested SegWit (P2SH-P2WPKH): SegWit spending wrapped in P2SH to use Base58Check addresses while spending via witness.
+- Seed phrase (mnemonic): Human-readable backup that encodes/derives a wallet seed used for HD key derivation.
+- Derivation path: HD wallet “address” within the tree (account/change/index) used to derive a specific child key.
+- Gap limit: Wallet scanning window for derived addresses; too small can miss funds received at higher indices.
+- Hardened derivation: HD derivation mode that prevents deriving child private keys from public-only derivation data.
+- UTXO set is the current global state of spendable bitcoin.
