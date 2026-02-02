@@ -146,3 +146,67 @@ That’s why the question says **“adjusted indirectly through consensus parame
 ---
 
 Miners cannot set arbitrary timestamps far in the future. Bitcoin enforces consensus validation limits on block timestamps.
+
+**True.**
+
+---
+
+## Why the nonce alone is insufficient
+
+The Bitcoin block header nonce is **32 bits**, giving:
+
+```
+2³² ≈ 4.29 billion possibilities
+```
+
+At modern hash rates, miners can exhaust this space **in milliseconds**.
+
+So relying on the nonce alone would stall mining almost instantly.
+
+---
+
+## How miners expand the search space
+
+Miners vary **other block components** to create new block header hashes:
+
+### 1️⃣ **Coinbase transaction**
+
+- Miners modify the **coinbase scriptSig** (often called _extra nonce_)
+- This changes the **coinbase txid**
+- Which changes the **Merkle root**
+- Which changes the block header hash
+
+This is the primary mechanism used in practice.
+
+---
+
+### 2️⃣ **Timestamp**
+
+- Miners may slightly adjust the block timestamp (within consensus limits)
+- This also changes the block header hash
+
+---
+
+### 3️⃣ **Transaction ordering / selection**
+
+- Reordering transactions changes the Merkle root
+- Less common than extranonce, but still valid
+
+---
+
+## Why the question mentions “coinbase-derived merkle root”
+
+Because:
+
+- The coinbase transaction is **fully controlled by the miner**
+- It can be changed arbitrarily without affecting validity
+- It gives an effectively unbounded search space
+
+This is standard mining behavior.
+
+---
+
+## Exam-ready answer
+
+> **True.**
+> The 32-bit nonce can be exhausted quickly, so miners also vary other block components—most commonly the coinbase transaction, which alters the Merkle root and expands the proof-of-work search space.
