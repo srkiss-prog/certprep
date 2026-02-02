@@ -65,3 +65,14 @@ Recurring mistakes, traps, and “looks true but isn’t” patterns found durin
 - Forgetting that txid can change due to malleability for some transaction types.
 - Thinking nLockTime/nSequence always invalidate a transaction (they enforce timing/relative constraints).
 - Treating dust as consensus-invalid rather than policy-limited.
+
+## Mining & Block Rewards
+
+- Confusing subsidy with total reward (reward = subsidy + included fees).
+- Thinking difficulty changes the hash function rather than the target.
+- Reversing target/difficulty intuition (higher target means easier mining, not harder).
+- Assuming coinbase rewards are spendable immediately (coinbase maturity applies).
+- Treating stale blocks as invalid or spendable-reward blocks (they can be valid but not best-chain spendable).
+- Mixing up expected-value vs variance in pool mining (pools smooth payouts, not magically increase expected return for same hashrate).
+- Overstating 51% attacks (reordering/censorship/reorg potential, not private-key theft or arbitrary coin creation).
+- Assuming all valid mempool transactions must be included in blocks (miners choose subsets for economics/policy).

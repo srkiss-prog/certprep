@@ -118,4 +118,25 @@ Canonical definitions for CBP/Bitcoin terms used across all domains.
 - Derivation path: HD wallet “address” within the tree (account/change/index) used to derive a specific child key.
 - Gap limit: Wallet scanning window for derived addresses; too small can miss funds received at higher indices.
 - Hardened derivation: HD derivation mode that prevents deriving child private keys from public-only derivation data.
+
+## Mining & Block Rewards
+
+- Proof-of-work (PoW): Mining process of hashing block headers until a hash is below the target.
+- Block header: Compact block metadata hashed for PoW (includes previous hash, merkle root, time, bits, nonce).
+- Target: Threshold a block hash must be below to be valid.
+- Difficulty: Inverse-style measure of mining hardness; higher difficulty corresponds to a lower target.
+- bits: Compact encoding of the current PoW target in the block header.
+- Block subsidy: Newly minted bitcoins awarded per block by schedule.
+- Block reward: Subsidy plus transaction fees from included transactions.
+- Coinbase transaction: Special transaction that creates new coins and collects fees for the miner.
+- Coinbase maturity: Required confirmation depth before coinbase outputs can be spent.
+- Hashrate: Estimated hashes per second contributed by miners/network.
+- Mining pool: Cooperative mining arrangement sharing work and payout variance.
+- Share (pool share): Lower-difficulty proof submitted to a pool to measure contributed work.
+- Stale block: Valid block not in the selected best chain after a fork race.
+- Reorg (chain reorganization): Switch from one valid chain tip to another with more cumulative work.
+- Cumulative work: Aggregate proof-of-work metric used for best-chain selection.
+- Retarget interval: Fixed block window used to adjust difficulty target.
+- Nonce / extra nonce: Miner-varied values used to expand PoW search space.
+- Security budget: Miner incentive pool over time (subsidy + fees), with fee share expected to rise as subsidy declines.
 - UTXO set is the current global state of spendable bitcoin.

@@ -15,15 +15,9 @@ Rules:
 
 ## Next Up
 
-### Bitcoin Basics
-
-- [ ] Fees and Fee Estimation
-
 ---
 
 ## In Progress
-
-- [ ] Transactions & UTXOs
 
 ---
 
@@ -38,6 +32,8 @@ Rules:
 ### Bitcoin Basics
 
 - [ ] Keys & Addresses
+- [ ] Transactions & UTXOs
+- [ ] Fees and Fee Estimation
 
 ---
 
