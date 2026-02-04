@@ -1,8 +1,8 @@
 # speed_recognition_append_v1 (CBP)
 
 Purpose: Generate _additional_ exam-aligned practice questions optimized for **speed-based recognition**
-(~16 seconds per question) for the CBP exam, and **append them to an existing markdown file** while
-avoiding exact duplicates of prior questions in that file.
+(~16 seconds per question) for the CBP exam, and **insert them directly into SQLite** while
+avoiding exact duplicates already present in the DB.
 
 Use this as the canonical prompt you paste into Codex / ChatGPT.
 
@@ -14,23 +14,38 @@ You are my CBP (Certified Bitcoin Professional) exam prep coach. Generate exam-a
 
 You MUST:
 
-- Read the target drill markdown file path I provide.
 - Read `knowledge/fast-fail-patterns.md` and update it with newly observed fast-fail patterns (deduplicate; keep it curated).
 - Read `knowledge/glossary.md` and append new/needed terms with one-line, exam-safe definitions (do not rewrite existing entries).
-- Extract prior questions from that file.
-- Generate new questions that may be similar in theme but are NOT the same as any prior question (no exact duplicate stems for TF; no exact duplicate stems/options sets for MC).
-- Append the new questions to the target file (append-only; do not edit or rewrite prior content).
+- Write new questions directly into `data/questions.db`.
+- Avoid duplicates against existing DB questions for the same subtopic.
+
+Database target:
+
+- DB path: `data/questions.db`
+- Tables:
+  - `subtopics(id, name)`
+  - `questions(id, subtopic_id, q_number, q_type, prompt, correct_tf, justification)`
+  - `question_options(id, question_id, option_text, is_correct)`
+
+Insertion rules:
+
+- Ensure subtopic exists in `subtopics`.
+- Insert exactly 25 new questions:
+  - Q1–Q15 as `TF`
+  - Q16–Q25 as `MCQ`
+- TF -> `correct_tf` as 1/0, no options rows.
+- MCQ -> `correct_tf=NULL`, insert options rows, exactly one `is_correct=1`.
+- Avoid exact duplicate prompts for the same subtopic.
 
 ---
 
 ## USER
 
-CBP Subtopic: <PASTE ONE BULLET FROM THE STUDY GUIDE VERBATIM OR A CLEAR SUBTOPIC NAME>  
-My current level (0–3): <0 novice | 1 basic | 2 solid | 3 strong>  
-Time constraint: ~16 seconds per question  
-Format: "speed_recognition_append_v1"  
-Target drill file (relative path): <e.g., practice/sessions/hash.md>
-Fast-fail patterns file (fixed): knowledge/fast-fail-patterns.md  
+CBP Subtopic: <PASTE ONE BULLET FROM THE STUDY GUIDE VERBATIM OR A CLEAR SUBTOPIC NAME>
+My current level (0–3): <0 novice | 1 basic | 2 solid | 3 strong>
+Time constraint: ~16 seconds per question
+Format: "speed_recognition_append_v1"
+Fast-fail patterns file (fixed): knowledge/fast-fail-patterns.md
 Glossary file (fixed): knowledge/glossary.md
 
 Constraints:
@@ -45,33 +60,18 @@ Constraints:
 
 Duplicate-avoidance rules (critical):
 
-- Parse the existing target drill file and build a list of prior questions.
-- Treat a question as a duplicate if the _question/statement stem_ is the same, even if you change tags/justification.
-- For multiple choice, treat it as a duplicate if the stem is the same OR if the stem + option set is effectively the same.
-- “Similar but not the same” is allowed: test the same concept from a different angle, with different wording, different distractors, or a different scenario.
-- If you suspect you’re generating a near-duplicate, change the axis: definition ↔ example, role ↔ consequence, “what is” ↔ “what is NOT”, missing component, swapped term confusions, boundary cases.
-
-Appending rules:
-
-- Do NOT modify or delete anything already in the file.
-- Append a new section at the end using the schema below.
-- Number questions sequentially continuing after the last existing question number in the file (if none exist, start at Q1).
+- Treat a question as duplicate if the question/statement stem matches an existing prompt for the same subtopic.
+- For MCQ, also avoid effectively same stem + same option set.
+- If near-duplicate risk exists, change axis: definition/example, role/consequence, what-is/what-is-not, missing component, swapped terms, boundary case.
 
 Output schema (must follow exactly):
 
-1. APPEND BLOCK (markdown)
+1. QUESTION INGESTION SUMMARY
 
-   - Start with a heading:
-     `## Drill Set: <YYYY-MM-DD> — <Subtopic>`
-   - Then include:
-     `### SPEED DRILL (25 new questions total)`
-     - Q1–Q15: TRUE / FALSE (continue numbering from file)
-     - Q16–Q25: MULTIPLE CHOICE (A–D) (continue numbering from file)
-       For each question:
-     - Question / Statement
-     - Correct answer
-     - 1-sentence justification
-     - Tag(s)
+   - Confirm:
+     - subtopic used
+     - questions inserted
+     - mcq options inserted
 
 2. FAST-FAIL UPDATE (markdown)
 
@@ -87,12 +87,12 @@ Output schema (must follow exactly):
 
 4. FILE WRITE INSTRUCTION
    - If you have filesystem write capability:
-     - Append the APPEND BLOCK to the target drill file.
-     - Update `knowledge/fast-fail-patterns.md` with the FAST-FAIL UPDATE changes.
-     - Update `knowledge/glossary.md` with the GLOSSARY UPDATE changes.
-     - Confirm what you changed in each file.
+     - Insert questions into `data/questions.db`.
+     - Update `knowledge/fast-fail-patterns.md` with FAST-FAIL changes.
+     - Update `knowledge/glossary.md` with GLOSSARY changes.
+     - Confirm what changed in each target.
    - If you do NOT have filesystem write capability:
-     - Output the APPEND BLOCK, then the FAST-FAIL UPDATE block, then the GLOSSARY UPDATE block (and nothing else).
+     - Output SQL transaction for DB inserts plus FAST-FAIL and GLOSSARY blocks.
 
 ---
 
@@ -101,4 +101,4 @@ Output schema (must follow exactly):
 - Prefer **short statements** over long paragraphs.
 - Traps should be **technically plausible** (common term confusion, swapped roles, reversed causality, subtle “always/never”, scope errors).
 - Keep justifications to **one sentence** to preserve drill speed.
-- Keep tags short and consistent (e.g., `hash-basics`, `pow`, `merkle`, `hash160`, `trap`, `properties`).
+- Keep tags short and consistent if needed internally.

@@ -28,7 +28,7 @@ cbp-prep/
   README.md
   codex/
     commands/              # Canonical prompt commands
-    templates/             # Optional markdown templates
+    templates/             # Optional prompt/output templates
   knowledge/
     glossary.md            # Global Bitcoin / CBP terminology
     fast-fail-patterns.md  # Global recurring mistake patterns
@@ -42,7 +42,11 @@ cbp-prep/
       07-bitcoin-commerce/
   practice/
     queue.md               # What to generate next
-    sessions/              # Optional dated practice sessions
+    sessions/              # Legacy markdown session exports (optional)
+  data/
+    questions.db           # Primary question bank (SQLite)
+  scripts/
+    quiz_cli.py            # Practice/exam CLI from SQLite
   sources/
     cbp-study-guide.pdf
 ```
@@ -60,25 +64,26 @@ cbp-prep/
   - Common fast-fail patterns  
   This evolves slowly and is refined over time.
 
-- **practice/**  
-  Append-only drill runs:
-  - Fresh questions
-  - New traps
-  - Repetition with variation  
-  Nothing is overwritten.
+- **practice + data/**  
+  SQLite-first drill storage:
+  - Fresh questions are inserted into `data/questions.db`
+  - Existing markdown session files are optional/legacy exports
+  - Repetition and variation are generated from the DB
 
 ---
 
 ## Topic-Level Workflow
 
-Each CBP subtopic lives in its own folder:
+Each CBP subtopic is represented in SQLite and can still have domain notes:
 
 ```
 knowledge/domains/03-cryptography-basics/hash-functions/
   topic.md        # Canonical summary for this subtopic
-  drills/
-    2026-01-15_Q1.md
-    2026-01-16_Q2.md
+
+data/questions.db
+  subtopics
+  questions
+  question_options
 ```
 
 ### `topic.md` contains:
@@ -86,13 +91,12 @@ knowledge/domains/03-cryptography-basics/hash-functions/
 - A refined mini recap
 - Curated key terms
 - Known fast-fail patterns
-- (Optionally) links to drills
 
-### `drills/*.md` contain:
-- One generated drill set
-- Time-pressure-oriented questions
-- Traps and justifications
-- No score tracking (initially)
+### `data/questions.db` contains:
+- Generated TF/MCQ question bank
+- Justifications for review
+- MCQ options with correctness flags
+- Source for practice/exam sessions in `scripts/quiz_cli.py`
 
 ---
 
@@ -140,10 +144,25 @@ Think of it as a lightweight Kanban board.
 1. Pick one CBP bullet from the study guide
 2. Create the topic folder (if it doesn’t exist)
 3. Run `speed_recognition_v1`
-4. Save output as a new drill file
+4. Insert generated questions directly into `data/questions.db`
 5. Optionally refine `topic.md` with insights
 
 No analytics, no scoring, no dashboards — just reps.
+
+---
+
+## Quick Start
+
+```bash
+# 1) Generate and ingest new questions
+# Use: codex/commands/speed_recognition_v1.md
+
+# 2) Launch interactive practice mode
+scripts/.venv/bin/python scripts/quiz_cli.py --mode practice
+
+# 3) Launch full exam mode (75 questions, 20 min)
+scripts/.venv/bin/python scripts/quiz_cli.py --mode exam
+```
 
 ---
 
