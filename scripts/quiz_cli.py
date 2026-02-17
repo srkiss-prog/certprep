@@ -50,6 +50,13 @@ class AnswerResult:
     elapsed_seconds: float
 
 
+@dataclass
+class PracticeSelection:
+    question_count: int
+    q_start: int | None
+    q_end: int | None
+
+
 def colors_enabled() -> bool:
     return sys.stdout.isatty() and "NO_COLOR" not in __import__("os").environ
 
@@ -179,12 +186,33 @@ def list_subtopics(conn: sqlite3.Connection) -> list[sqlite3.Row]:
     )
 
 
+def count_questions_in_scope(
+    conn: sqlite3.Connection,
+    *,
+    subtopic_id: int,
+    q_start: int | None,
+    q_end: int | None,
+) -> int:
+    sql = "SELECT COUNT(*) FROM questions WHERE subtopic_id = ?"
+    params: list[int] = [subtopic_id]
+    if q_start is not None:
+        sql += " AND q_number >= ?"
+        params.append(q_start)
+    if q_end is not None:
+        sql += " AND q_number <= ?"
+        params.append(q_end)
+    row = conn.execute(sql, tuple(params)).fetchone()
+    return int(row[0]) if row else 0
+
+
 def fetch_questions(
     conn: sqlite3.Connection,
     *,
     mode: str,
     question_count: int,
     subtopic_id: int | None = None,
+    q_start: int | None = None,
+    q_end: int | None = None,
 ) -> list[Question]:
     base_select = """
         SELECT q.id, s.name AS subtopic, q.q_number, q.q_type, q.prompt, q.correct_tf, q.justification
@@ -195,10 +223,19 @@ def fetch_questions(
     if mode == "practice":
         if subtopic_id is None:
             raise ValueError("subtopic_id is required in practice mode")
-        rows = conn.execute(
-            base_select + " WHERE s.id = ? ORDER BY RANDOM() LIMIT ?",
-            (subtopic_id, question_count),
-        ).fetchall()
+
+        where_clauses = ["s.id = ?"]
+        params: list[int] = [subtopic_id]
+        if q_start is not None:
+            where_clauses.append("q.q_number >= ?")
+            params.append(q_start)
+        if q_end is not None:
+            where_clauses.append("q.q_number <= ?")
+            params.append(q_end)
+
+        sql = base_select + " WHERE " + " AND ".join(where_clauses) + " ORDER BY RANDOM() LIMIT ?"
+        params.append(question_count)
+        rows = conn.execute(sql, tuple(params)).fetchall()
     else:
         rows = conn.execute(base_select + " ORDER BY RANDOM() LIMIT ?", (question_count,)).fetchall()
 
@@ -263,6 +300,110 @@ def choose_subtopic(conn: sqlite3.Connection, requested_name: str | None) -> sql
             if 1 <= index <= len(subtopics):
                 return subtopics[index - 1]
         print(paint("  Invalid choice.", C.YELLOW))
+
+
+def choose_integer(prompt: str, *, default: int, minimum: int, maximum: int | None = None) -> int:
+    while True:
+        limit_hint = f"{minimum}+" if maximum is None else f"{minimum}-{maximum}"
+        raw = input(f"{prompt} [{default}, {limit_hint}]: ").strip()
+        if not raw:
+            return default
+        if raw.isdigit():
+            value = int(raw)
+            if value >= minimum and (maximum is None or value <= maximum):
+                return value
+        print(paint("  Invalid number.", C.YELLOW))
+
+
+def resolve_range(
+    *,
+    min_q: int,
+    max_q: int,
+    requested_start: int | None,
+    requested_end: int | None,
+) -> tuple[int | None, int | None]:
+    if requested_start is None and requested_end is None:
+        return None, None
+
+    q_start = requested_start if requested_start is not None else min_q
+    q_end = requested_end if requested_end is not None else max_q
+
+    if q_start > q_end:
+        raise SystemExit("Question range is invalid: start must be <= end.")
+    if q_start < min_q or q_end > max_q:
+        raise SystemExit(
+            f"Question range must stay inside available subtopic bounds Q{min_q}..Q{max_q}."
+        )
+
+    return q_start, q_end
+
+
+def choose_practice_selection(
+    conn: sqlite3.Connection,
+    *,
+    subtopic: sqlite3.Row,
+    requested_count: int | None,
+    requested_q_start: int | None,
+    requested_q_end: int | None,
+) -> PracticeSelection:
+    min_row = conn.execute(
+        "SELECT MIN(q_number) AS min_q, MAX(q_number) AS max_q FROM questions WHERE subtopic_id = ?",
+        (subtopic["id"],),
+    ).fetchone()
+    if min_row is None or min_row["min_q"] is None or min_row["max_q"] is None:
+        raise SystemExit(f"Subtopic '{subtopic['name']}' has no questions.")
+
+    min_q = int(min_row["min_q"])
+    max_q = int(min_row["max_q"])
+
+    q_start, q_end = resolve_range(
+        min_q=min_q,
+        max_q=max_q,
+        requested_start=requested_q_start,
+        requested_end=requested_q_end,
+    )
+
+    needs_prompt = requested_count is None and requested_q_start is None and requested_q_end is None
+    if needs_prompt:
+        panel("Practice Question Scope")
+        print(f"  Subtopic: {paint(subtopic['name'], C.CYAN)}")
+        print(f"  Available q_number span: Q{min_q} to Q{max_q}")
+        print("  1) Random questions")
+        print("  2) Question number range")
+
+        while True:
+            mode_choice = input("\n  Enter choice [1-2] (default 1): ").strip()
+            if mode_choice in {"", "1", "2"}:
+                break
+            print(paint("  Invalid choice.", C.YELLOW))
+
+        if mode_choice == "2":
+            q_start = choose_integer("  Start at question number", default=min_q, minimum=min_q, maximum=max_q)
+            q_end = choose_integer("  End at question number", default=max_q, minimum=q_start, maximum=max_q)
+
+    available = count_questions_in_scope(conn, subtopic_id=subtopic["id"], q_start=q_start, q_end=q_end)
+    if available == 0:
+        if q_start is not None and q_end is not None:
+            raise SystemExit(f"No questions found in '{subtopic['name']}' for range Q{q_start}..Q{q_end}.")
+        raise SystemExit(f"No questions found in '{subtopic['name']}'.")
+
+    if requested_count is not None:
+        if requested_count <= 0:
+            raise SystemExit("Question count must be greater than 0.")
+        question_count = requested_count
+    else:
+        default_count = min(25, available)
+        if needs_prompt:
+            question_count = choose_integer(
+                "\n  How many questions",
+                default=default_count,
+                minimum=1,
+                maximum=available,
+            )
+        else:
+            question_count = default_count
+
+    return PracticeSelection(question_count=question_count, q_start=q_start, q_end=q_end)
 
 
 def ask_tf(question: Question, timeout_seconds: float | None) -> bool:
@@ -486,7 +627,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--question-count",
         type=int,
-        help="Override question count (practice default 25, exam default 75)",
+        help="Practice default is 25 (random). Exam default is 75.",
+    )
+    parser.add_argument(
+        "--q-start",
+        type=int,
+        help="Practice only: lower q_number bound (inclusive).",
+    )
+    parser.add_argument(
+        "--q-end",
+        type=int,
+        help="Practice only: upper q_number bound (inclusive).",
     )
     parser.add_argument(
         "--justification",
@@ -513,24 +664,44 @@ def main() -> None:
 
     splash()
     mode = choose_mode(args.mode)
-    question_count = args.question_count if args.question_count is not None else (25 if mode == "practice" else 75)
 
-    if question_count <= 0:
-        raise SystemExit("Question count must be greater than 0.")
+    if mode == "exam":
+        question_count = args.question_count if args.question_count is not None else 75
+        if question_count <= 0:
+            raise SystemExit("Question count must be greater than 0.")
+    else:
+        question_count = args.question_count if args.question_count is not None else 25
 
     with connect_db(db_path) as conn:
         if mode == "practice":
             subtopic = choose_subtopic(conn, args.subtopic)
+            selection = choose_practice_selection(
+                conn,
+                subtopic=subtopic,
+                requested_count=args.question_count,
+                requested_q_start=args.q_start,
+                requested_q_end=args.q_end,
+            )
             questions = fetch_questions(
                 conn,
                 mode="practice",
-                question_count=question_count,
+                question_count=selection.question_count,
                 subtopic_id=subtopic["id"],
+                q_start=selection.q_start,
+                q_end=selection.q_end,
             )
-            if len(questions) < question_count:
+            if len(questions) < selection.question_count:
+                scope_text = (
+                    f" in range Q{selection.q_start}..Q{selection.q_end}"
+                    if selection.q_start is not None and selection.q_end is not None
+                    else ""
+                )
                 print(
                     paint(
-                        f"Requested {question_count} questions but only found {len(questions)} in '{subtopic['name']}'.",
+                        (
+                            f"Requested {selection.question_count} questions but only found "
+                            f"{len(questions)} in '{subtopic['name']}'{scope_text}."
+                        ),
                         C.YELLOW,
                     )
                 )

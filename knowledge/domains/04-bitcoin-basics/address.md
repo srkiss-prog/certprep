@@ -32,4 +32,146 @@ A watch-only wallet is a cryptocurrency wallet that can view balances, transacti
 
 # Extended public keys
 
+An extended public key (XPUB) is defined in BIP-32 and contains:
+
+- A public key
+- A chain code (for deterministic derivation)
+- Depth and parent fingerprint
+- Child index
+
+With an extended public key you can:
+
+- Derive all future public keys and addresses
+- Not derive private keys
+
+This is why xpubs are used for watch-only wallets.
+
 xpub / ypub / zpub tell the wallet how to turn derived public keys into Bitcoin addresses.
+xpub / ypub / zpub are human-readable encodings of extended public keys used by Hierarchical Deterministic (HD) wallets. They determine how child addresses are derived and, critically, which Bitcoin script type those addresses will use.
+
+| Prefix          | BIP     | Script type                 | Address format | Typical address |
+| --------------- | ------- | --------------------------- | -------------- | --------------- |
+| **xpub**        | BIP-44  | Legacy P2PKH                | Base58         | `1...`          |
+| **ypub**        | BIP-49  | Nested SegWit (P2SH-P2WPKH) | Base58         | `3...`          |
+| **zpub**        | BIP-84  | Native SegWit (P2WPKH)      | Bech32         | `bc1q...`       |
+| _(tpub / vpub)_ | testnet | testnet equivalents         | testnet        | `tb1...`        |
+
+## Executive Summary
+
+- **zpub** is a _legacy SegWit-era convention_ for P2WPKH (BIP-84)
+- **Taproot (P2TR)** **cannot be represented by zpub**
+- **Taproot requires descriptors**, specifically **`tr(...)`**
+- Descriptors are **explicit, script-aware, and future-proof**
+- Modern Bitcoin tooling (notably **Bitcoin Core**) treats descriptors as **authoritative**
+
+---
+
+## What zpub Is (and Its Hard Limit)
+
+### zpub in one sentence
+
+A **zpub** is a **Base58-encoded extended public key** that _implicitly_ signals:
+
+> “Derive keys and wrap them in **P2WPKH** (native SegWit v0).”
+
+### What zpub encodes implicitly
+
+- HD derivation (BIP-32)
+- Script type: **P2WPKH**
+- Address format: **Bech32 `bc1q…`**
+- Spend path: **ECDSA + pubkey hash**
+
+### The hard limitation
+
+zpub **assumes**:
+
+- A **hashed public key**
+- **SegWit v0**
+- **ECDSA signatures**
+
+Taproot breaks **all three assumptions**.
+
+---
+
+## What Taproot (P2TR) Changes
+
+Taproot (BIP-340/341/342) introduces:
+
+| Aspect         | Pre-Taproot (zpub)        | Taproot                   |
+| -------------- | ------------------------- | ------------------------- |
+| Script version | SegWit v0                 | SegWit v1                 |
+| Address        | `bc1q…`                   | `bc1p…`                   |
+| Key format     | Compressed pubkey         | X-only pubkey             |
+| Signature      | ECDSA                     | Schnorr                   |
+| Spend model    | Single fixed path         | Key path + script paths   |
+| Privacy        | Script visible when spent | Script hidden unless used |
+
+There is **no place** in a zpub to express:
+
+- Script trees (MAST)
+- Key-path vs script-path spending
+- Schnorr semantics
+
+---
+
+## Side-by-Side Comparison
+
+| Dimension                | zpub      | `tr()` descriptor |
+| ------------------------ | --------- | ----------------- |
+| Script explicitness      | Implicit  | Explicit          |
+| Supports Taproot         | ❌        | ✅                |
+| Script trees             | ❌        | ✅                |
+| Schnorr-aware            | ❌        | ✅                |
+| Future extensibility     | ❌        | ✅                |
+| Wallet scanning accuracy | Heuristic | Deterministic     |
+| Exam correctness         | Legacy    | Modern            |
+
+---
+
+## Why Descriptors Replaced zpub (Conceptually)
+
+zpub answers only:
+
+> “Which address format should I derive?”
+
+Descriptors answer:
+
+> “What _exact script_ locks these coins, and how are they spendable?”
+
+This distinction is critical for:
+
+- Taproot
+- Multisig
+- Miniscript
+- Policy analysis
+- PSBT workflows
+- On-chain analytics correctness
+
+---
+
+## CBP / Analyst Exam Traps
+
+**Trap statement:**
+
+> “zpub is the Taproot equivalent of xpub”
+
+**Correct response:**
+False. Taproot **requires descriptors**; there is **no zpub-style encoding** for P2TR.
+
+---
+
+**Trap statement:**
+
+> “Taproot wallets export a zpub”
+
+**Correct response:**
+False. Taproot wallets export **descriptors** (often BIP-86 based).
+
+---
+
+## Mental Model (Use This)
+
+> **zpub tells a wallet how to _wrap_ a key**
+> **`tr()` tells Bitcoin how the coins can _actually be spent_**
+
+Taproot made the second mandatory.

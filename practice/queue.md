@@ -15,6 +15,42 @@ Rules:
 
 ## Next Up
 
+### Consensus, Mining & BIPs
+
+- [ ] 51% Attacks
+- [ ] Important BIPs
+- [ ] Forks (Soft, Hard, Code)
+- [ ] Taproot & Ordinals (Conceptual)
+
+### Wallets & Key Management
+
+- [ ] Types of Clients (Full vs SPV)
+- [ ] Wallet Types (Hot, Cold, Hardware, Multisig)
+- [ ] Deterministic Wallets & Passphrases
+- [ ] Imports, Exports, Backups & Recovery
+- [ ] Wallet Import Format (WIF)
+
+### History of Money
+
+- [ ] Functions of Money
+- [ ] Properties of Money
+- [ ] Centralized Ledgers
+- [ ] Bitcoin Whitepaper (Key Concepts)
+- [ ] Predecessors & Notable Events
+
+### Digital Economy
+
+- [ ] Centralized vs Decentralized Systems
+- [ ] Decentralized Consensus (Four Processes)
+- [ ] Altcoins and Fork Types
+- [ ] Exchanges (Custodial vs Non-Custodial)
+
+### Bitcoin Commerce
+
+- [ ] Using Bitcoin in Practice
+- [ ] Payment Processors
+- [ ] Merchant Setups (On-chain + Lightning)
+
 ---
 
 ## In Progress
@@ -35,6 +71,12 @@ Rules:
 - [ ] Transactions & UTXOs
 - [ ] Fees and Fee Estimation
 
+### Consensus, Mining & BIPs
+
+- [ ] Mining and Block Rewards
+- [ ] Difficulty Adjustment & Proof-of-Work
+- [ ] Mining Pools & Hardware
+
 ---
 
 ## Revisit (High Trap Density)
@@ -42,45 +84,6 @@ Rules:
 ---
 
 ## Backlog (Lower Priority / Later)
-
-### History of Money
-
-- [ ] Functions of Money
-- [ ] Properties of Money
-- [ ] Centralized Ledgers
-- [ ] Bitcoin Whitepaper (Key Concepts)
-- [ ] Predecessors & Notable Events
-
-### Digital Economy
-
-- [ ] Centralized vs Decentralized Systems
-- [ ] Decentralized Consensus (Four Processes)
-- [ ] Altcoins and Fork Types
-- [ ] Exchanges (Custodial vs Non-Custodial)
-
-### Consensus, Mining & BIPs
-
-- [ ] Mining and Block Rewards
-- [ ] Difficulty Adjustment & Proof-of-Work
-- [ ] Mining Pools & Hardware
-- [ ] 51% Attacks
-- [ ] BIPs (32, 39, 44)
-- [ ] Forks (Soft, Hard, Code)
-- [ ] Taproot & Ordinals (Conceptual)
-
-### Wallets & Key Management
-
-- [ ] Types of Clients (Full vs SPV)
-- [ ] Wallet Types (Hot, Cold, Hardware, Multisig)
-- [ ] Deterministic Wallets & Passphrases
-- [ ] Imports, Exports, Backups & Recovery
-- [ ] Wallet Import Format (WIF)
-
-### Bitcoin Commerce
-
-- [ ] Using Bitcoin in Practice
-- [ ] Payment Processors
-- [ ] Merchant Setups (On-chain + Lightning)
 
 ---
 

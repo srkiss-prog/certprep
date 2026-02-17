@@ -2,6 +2,8 @@
 
 **Taproot** is a Bitcoin protocol upgrade (activated Nov 2021) that improves **privacy**, **efficiency**, and **smart-contract expressiveness**. It does this by combining **Schnorr signatures**, **MAST**, and a new output type (**P2TR**).
 
+bech32m is the typical encoding
+
 ---
 
 ## 1) What problem Taproot solves
@@ -77,7 +79,6 @@ Taproot introduces a new output type:
 
 - **P2TR** replaces P2PKH / P2WSH for modern usage
 - Output commits to:
-
   - an internal public key
   - an optional script tree (tweaked into the key)
 
@@ -126,7 +127,6 @@ Taproot raises the cost of chain analysis without breaking auditability.
 - Enables scalable smart contracts without Ethereum-style transparency
 - Improves fungibility
 - Strengthens Bitcoin as a settlement layer for:
-
   - Lightning
   - DLCs
   - Vaults
@@ -138,9 +138,13 @@ Taproot raises the cost of chain analysis without breaking auditability.
 
 > **Taproot lets Bitcoin hide complexity behind cryptography, so advanced contracts look like normal payments unless they need to reveal more.**
 
-If you want, next we can:
+## Comparison
 
-- Compare P2TR vs P2WSH vs legacy
-- Walk through a Taproot spend step-by-step
-- Explain how Lightning specifically benefits
-- Do a forensics / chain-analysis deep dive
+| Aspect         | Pre-Taproot (zpub)        | Taproot                   |
+| -------------- | ------------------------- | ------------------------- |
+| Script version | SegWit v0                 | SegWit v1                 |
+| Address        | `bc1q…`                   | `bc1p…`                   |
+| Key format     | Compressed pubkey         | X-only pubkey             |
+| Signature      | ECDSA                     | Schnorr                   |
+| Spend model    | Single fixed path         | Key path + script paths   |
+| Privacy        | Script visible when spent | Script hidden unless used |

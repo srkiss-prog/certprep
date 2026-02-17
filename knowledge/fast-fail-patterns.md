@@ -76,3 +76,18 @@ Recurring mistakes, traps, and “looks true but isn’t” patterns found durin
 - Mixing up expected-value vs variance in pool mining (pools smooth payouts, not magically increase expected return for same hashrate).
 - Overstating 51% attacks (reordering/censorship/reorg potential, not private-key theft or arbitrary coin creation).
 - Assuming all valid mempool transactions must be included in blocks (miners choose subsets for economics/policy).
+- Equating “longest chain” with most blocks instead of most cumulative work.
+- Assuming Bitcoin retargets difficulty every block.
+- Treating one confirmation as absolute finality instead of probabilistic security.
+- Reversing the target/difficulty relation (lower target = harder, not easier).
+
+## Mining pools and hardware
+
+- Assuming higher TH/s alone guarantees better profits while ignoring J/TH, power price, and uptime.
+- Confusing pool shares with valid network blocks and overstating what a submitted share proves.
+- Treating many participants in one pool as decentralization instead of concentrated block-template control.
+- Ignoring thermal throttling and hardware error rates when estimating real-world hashrate from spec sheets.
+- Misreading payout method labels (PPS vs PPLNS) and assuming both have identical variance behavior for miners.
+- Confusing stale shares with stale blocks and overestimating their consensus impact.
+- Assuming lower pool fee always yields better net payout while ignoring reject rate, uptime, and payout reliability.
+- Interpreting advertised hashrate as constant real output without accounting for ambient conditions and tuning limits.

@@ -210,3 +210,148 @@ This is standard mining behavior.
 
 > **True.**
 > The 32-bit nonce can be exhausted quickly, so miners also vary other block components—most commonly the coinbase transaction, which alters the Merkle root and expands the proof-of-work search space.
+
+These terms come from **cryptocurrency mining pool reward schemes**, primarily in Bitcoin and similar Proof-of-Work networks. They define **how miners are paid** for contributing hash power.
+
+---
+
+## 1️⃣ PPS – Pay Per Share
+
+### Concept
+
+In **PPS**, the pool pays you a **fixed amount for every valid share** you submit, regardless of whether the pool actually finds a block.
+
+A _share_ = proof that you performed work at a certain difficulty threshold (lower than full network difficulty).
+
+### Mechanics
+
+- You submit shares.
+- Each share has a mathematically expected value.
+- You are paid immediately based on that expected value.
+- The pool operator assumes all variance risk.
+
+### Formula (simplified)
+
+[
+Payout = Share_Value = \frac{Block_Reward \times (1 - Pool_Fee)}{Network_Difficulty}
+]
+
+### Characteristics
+
+| Aspect       | PPS                                      |
+| ------------ | ---------------------------------------- |
+| Variance     | Very low (stable income)                 |
+| Risk         | Pool operator                            |
+| Fees         | Higher (typically 3–5%+)                 |
+| Suitable for | Small miners who want predictable income |
+
+### Key Insight
+
+You are effectively selling hashpower at a fixed price.
+
+---
+
+## 2️⃣ PPLNS – Pay Per Last N Shares
+
+### Concept
+
+In **PPLNS**, miners are paid only when the pool finds a block, and the reward is distributed among miners who submitted the last **N shares** before the block was found.
+
+No guaranteed payout per share.
+
+### Mechanics
+
+- Pool finds a block.
+- Look at the last N shares.
+- Reward is distributed proportionally to contribution within those N shares.
+
+### Characteristics
+
+| Aspect       | PPLNS                  |
+| ------------ | ---------------------- |
+| Variance     | Higher                 |
+| Risk         | Miner                  |
+| Fees         | Lower (typically 1–2%) |
+| Suitable for | Long-term miners       |
+
+### Important Detail
+
+If you disconnect before a block is found, your shares might **not** be included in the payout window.
+
+### Key Insight
+
+PPLNS reduces exploitability and discourages short-term switching behavior.
+
+---
+
+## 3️⃣ Pool Hopping
+
+### Definition
+
+**Pool hopping** is a strategy where miners switch between pools to exploit weaknesses in reward systems (especially older proportional systems).
+
+### Why It Works (in flawed systems)
+
+In simple proportional payout systems:
+
+- Early shares in a mining round are worth more.
+- Later shares become less valuable as the round lengthens.
+
+So hoppers:
+
+1. Join a pool at the start of a round.
+2. Leave once expected value drops.
+3. Move to a “fresh” pool.
+
+This increases their expected return at the expense of loyal miners.
+
+---
+
+## Why PPS and PPLNS Were Developed
+
+| System       | Vulnerable to Pool Hopping? |
+| ------------ | --------------------------- |
+| Proportional | Yes                         |
+| PPS          | No                          |
+| PPLNS        | No (designed to resist it)  |
+
+PPLNS specifically fixes the economic flaw that made pool hopping profitable.
+
+---
+
+## Visual Intuition
+
+### PPS
+
+You get paid like a salaried employee — steady income, lower risk.
+
+### PPLNS
+
+You get paid like a commission worker — higher variance, but fair over time.
+
+### Pool Hopping
+
+Like jumping between restaurants right before tips are distributed.
+
+---
+
+## Practical Example (Bitcoin)
+
+F2Pool, Antpool and Slush Pool historically offered different payout models (PPS, PPLNS, score-based variants).
+
+Modern large pools often:
+
+- Offer both PPS and PPLNS options.
+- Charge higher fees for PPS due to variance risk.
+
+---
+
+## Summary
+
+| Feature              | PPS                           | PPLNS                 |
+| -------------------- | ----------------------------- | --------------------- |
+| Payment timing       | Immediate per share           | Only when block found |
+| Variance             | Low                           | High                  |
+| Fee                  | Higher                        | Lower                 |
+| Good for             | Small / stable income seekers | Long-term miners      |
+| Resistant to hopping | Yes                           | Yes                   |

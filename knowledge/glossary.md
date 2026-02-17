@@ -132,6 +132,7 @@ Canonical definitions for CBP/Bitcoin terms used across all domains.
 - Coinbase maturity: Required confirmation depth before coinbase outputs can be spent.
 - Hashrate: Estimated hashes per second contributed by miners/network.
 - Mining pool: Cooperative mining arrangement sharing work and payout variance.
+- Stratum: Common pool-miner protocol for distributing mining jobs and submitting shares.
 - Share (pool share): Lower-difficulty proof submitted to a pool to measure contributed work.
 - Stale block: Valid block not in the selected best chain after a fork race.
 - Reorg (chain reorganization): Switch from one valid chain tip to another with more cumulative work.
@@ -140,3 +141,13 @@ Canonical definitions for CBP/Bitcoin terms used across all domains.
 - Nonce / extra nonce: Miner-varied values used to expand PoW search space.
 - Security budget: Miner incentive pool over time (subsidy + fees), with fee share expected to rise as subsidy declines.
 - UTXO set is the current global state of spendable bitcoin.
+- PPS (Pay-Per-Share): Pool payout method paying a fixed amount per valid share, with variance largely absorbed by the operator.
+- PPLNS (Pay-Per-Last-N-Shares): Pool payout method based on a rolling share window, shifting more variance to miners.
+- Pool luck: Ratio of expected shares to actual shares needed to find blocks over a period.
+- Vardiff (Variable Difficulty): Pool mechanism that adjusts per-miner share difficulty to control share submission rate.
+- Share difficulty: Pool-assigned target hardness used for measuring miner contribution, separate from network difficulty.
+- Pool fee: Percentage of miner rewards retained by the pool operator as service cost.
+- Stale share: Share submitted after a job becomes obsolete and typically not credited by the pool.
+- Thermal throttling: Automatic reduction in miner performance to prevent overheating.
+- Hashboard: ASIC miner board containing chips that perform hashing work.
+- Uptime: Percentage of time mining hardware is operational and submitting shares.
